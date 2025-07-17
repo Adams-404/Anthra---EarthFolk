@@ -1,6 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 Anthra
 
-## Getting Started
+Where humanity's stories, traditions, and identities converge on a living, breathing globe.
+
+## 🧠 What is Anthra?
+
+Anthra is an interactive 3D experience that lets you explore the cultures, languages, rituals, myths, and heritage of people from every corner of the Earth — all through an elegant, rotating globe.
+
+It's not a history book or a textbook.  
+It's a portal into human experience.
+
+## 🌐 What You Can Do on Anthra
+
+- Spin the globe, click any country or region
+- Dive into its cultural DNA:
+  - Hear local music or spoken language
+  - View traditional garments, masks, crafts
+  - Read or listen to folk tales, myths, or rituals
+  - Discover festivals, dances, cuisine, and belief systems
+  - Compare how similar customs appear across distant cultures
+  - Understand how people celebrate, grieve, pray, live, and love
+
+## 🌱 Why It Matters
+
+The world is forgetting things:  
+Languages are dying. Traditions are vanishing.  
+Young generations are growing up disconnected from their ancestral roots.
+
+Anthra exists to reverse that.  
+To preserve and present the world's living cultures — not just facts, but feelings.  
+It connects you to others, but also to yourself — your identity, your origin.
+
+## 🎯 Who It's For
+
+- Learners & wanderers who want to explore the world deeply
+- Diaspora communities reconnecting with their heritage
+- Educators teaching global awareness
+- Cultural enthusiasts looking beyond surface-level tourism
+
+## ✨ The Experience
+
+You don't scroll.  
+You don't just watch.
+
+You orbit, zoom, and step into the soul of a people.  
+Anthra isn't about where countries are — it's about who lives there, and why it matters.
+
+## 🚀 Getting Started
 
 First, run the development server:
 
@@ -14,7 +59,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to explore Anthra.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

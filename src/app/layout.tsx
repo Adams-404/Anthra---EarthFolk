@@ -15,8 +15,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "A Climate Story! NASA Hackathon '24",
-  description: "$$$Marc's Wonderful Planet ATBP",
+  title: "Anthra - Earthfolk",
+  description: "Explore the impact of climate change across continents with Anthra - Earthfolk",
 };
 
 export default function RootLayout({

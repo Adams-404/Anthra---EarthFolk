@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Settings, Volume2, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -59,10 +58,18 @@ const teamMembers = [
 
 import { ISound, IVolume } from "./discover";
 
-const SettingsComponent: React.FC<ISound & IVolume> = ({ setSoundEnabled, soundEnabled, volume, setVolume }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [showCredits, setShowCredits] = useState(false);
+interface ISound {
+    soundEnabled: boolean;
+    setSoundEnabled: (enabled: boolean) => void;
+}
 
+interface IVolume {
+    volume: number;
+    setVolume: (volume: number) => void;
+}
+
+const SettingsComponent: React.FC<ISound & IVolume> = ({ soundEnabled, setSoundEnabled, volume, setVolume }) => {
+    const [isOpen, setIsOpen] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -81,20 +88,6 @@ const SettingsComponent: React.FC<ISound & IVolume> = ({ setSoundEnabled, soundE
         }
     }, [soundEnabled]);
 
-    useEffect(() => {
-        const handleEscape = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                setShowCredits(false);
-            }
-        };
-
-        document.addEventListener("keydown", handleEscape);
-
-        return () => {
-            document.removeEventListener("keydown", handleEscape);
-        };
-    }, []);
-
     const handleVolumeChange = (newValue: number[]) => {
         setVolume(newValue[0]);
         if (audioRef.current) {
@@ -107,119 +100,66 @@ const SettingsComponent: React.FC<ISound & IVolume> = ({ setSoundEnabled, soundE
     };
 
     return (
-        <>
-            <div className="absolute top-4 right-4 flex items-center space-x-2 z-50">
-                <Button variant="outline" onClick={() => setShowCredits(true)}>
-                    Credits
-                </Button>
-                <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon">
-                            <Settings className="h-4 w-4" />
-                            <span className="sr-only">Open settings</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" align="end" forceMount>
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <DropdownMenuLabel>Settings</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <div className="p-2">
-                                <div className="flex items-center justify-between">
-                                    <Label htmlFor="sound-toggle" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        Enable Sound
-                                    </Label>
-                                    <Switch
-                                        id="sound-toggle"
-                                        checked={soundEnabled}
-                                        onCheckedChange={toggleSound}
-                                    />
-                                </div>
-                                {soundEnabled && (
-                                    <div className="mt-4">
-                                        <Label htmlFor="volume-slider" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            Volume
-                                        </Label>
-                                        <div className="flex items-center mt-2">
-                                            <Volume2 className="w-4 h-4 mr-2" />
-                                            <Slider.Root
-                                                className="relative flex items-center select-none touch-none w-full h-5"
-                                                value={[volume]}
-                                                onValueChange={handleVolumeChange}
-                                                max={100}
-                                                step={1}
-                                                aria-label="Volume"
-                                            >
-                                                <Slider.Track className="bg-secondary relative grow rounded-full h-1">
-                                                    <Slider.Range className="absolute bg-primary rounded-full h-full" />
-                                                </Slider.Track>
-                                                <Slider.Thumb
-                                                    className="block w-4 h-4 bg-primary rounded-full focus:outline-none"
-                                                />
-                                            </Slider.Root>
-                                            <span className="ml-2 text-sm">{volume}%</span>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </motion.div>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-
-            <AnimatePresence>
-                {showCredits && (
+        <div className="absolute top-4 right-4 z-50">
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                        <Settings className="h-4 w-4" />
+                        <span className="sr-only">Open settings</span>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-transparent backdrop-blur-sm z-50"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="fixed inset-0 md:inset-10 bg-transparent rounded-lg shadow-lg overflow-auto"
-                        >
-                            <div className="p-6 w-full">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-2xl font-bold text-white">Credits</h2>
-                                    <Button variant="secondary" className="" size="icon" onClick={() => setShowCredits(false)}>
-                                        <X className="h-4 w-4" />
-                                        <span className="sr-only">Close</span>
-                                    </Button>
-                                </div>
-                                <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {teamMembers.map((member, index) => (
-                                        <a href={member.linkedin} key={index} className="flex flex-col items-center p-4 bg-muted rounded-lg">
-                                            <Image
-                                                src={member.image}
-                                                alt={member.name}
-                                                width={100}
-                                                height={100}
-                                                className="rounded-full mb-4"
-                                            />
-                                            <h3 className="text-lg font-semibold text-center">{member.name}</h3>
-                                            <p className="text-sm text-muted-foreground mb-2 text-balance text-center">{member.position}</p>
-                                        </a>
-                                    ))}
-                                </div>
+                        <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <div className="p-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="sound-toggle" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    Enable Sound
+                                </Label>
+                                <Switch
+                                    id="sound-toggle"
+                                    checked={soundEnabled}
+                                    onCheckedChange={toggleSound}
+                                />
                             </div>
-                        </motion.div>
+                            {soundEnabled && (
+                                <div className="mt-4">
+                                    <Label htmlFor="volume-slider" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Volume
+                                    </Label>
+                                    <div className="flex items-center mt-2">
+                                        <Volume2 className="w-4 h-4 mr-2" />
+                                        <Slider.Root
+                                            className="relative flex items-center select-none touch-none w-full h-5"
+                                            value={[volume]}
+                                            onValueChange={handleVolumeChange}
+                                            max={100}
+                                            step={1}
+                                            aria-label="Volume"
+                                        >
+                                            <Slider.Track className="bg-secondary relative grow rounded-full h-1">
+                                                <Slider.Range className="absolute bg-primary rounded-full h-full" />
+                                            </Slider.Track>
+                                            <Slider.Thumb
+                                                className="block w-4 h-4 bg-primary rounded-full focus:outline-none"
+                                            />
+                                        </Slider.Root>
+                                        <span className="ml-2 text-sm">{volume}%</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </motion.div>
-                )}
-            </AnimatePresence>
-
-            <audio
-                ref={audioRef}
-                src="/climate_change.mp3"
-                loop
-            />
-        </>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <audio ref={audioRef} loop src="/climate_change.mp3" />
+        </div>
     );
 };
 

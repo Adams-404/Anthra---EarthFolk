@@ -1,6 +1,5 @@
 "use client";
 
-import Discover from "@/components/discover";
 import ExtendedContinentDrawer from "@/components/drawer";
 import GlobeWrapper from "@/components/globewrapper";
 import SettingsComponent from "@/components/settings";
@@ -149,9 +148,7 @@ const Page = () => {
   const [clickedContinents, setClickedContinents] = useState<{ [key: string]: boolean; }>({});
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [volume, setVolume] = useState(50);
-  const [showVideoPopup, setShowVideoPopup] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const allContinentsClickedRef = useRef(false);
 
   const handleContinentSelect = (continent: Continent) => {
     setClickedContinents(prev => ({ ...prev, [continent.name]: true }));
@@ -160,23 +157,7 @@ const Page = () => {
     );
   };
 
-  useEffect(() => {
-    const allContinentsClicked = continents.every(continent => clickedContinents[continent.name]);
-    allContinentsClickedRef.current = allContinentsClicked;
-  }, [clickedContinents]);
 
-  useEffect(() => {
-    if (allContinentsClickedRef.current && selectedContinent === null) {
-      setShowVideoPopup(true);
-      setSoundEnabled(false);
-    }
-  }, [selectedContinent]);
-
-  useEffect(() => {
-    if (showVideoPopup && videoRef.current) {
-      videoRef.current.play();
-    }
-  }, [showVideoPopup]);
 
   const handleCloseContinent = () => {
     setSelectedContinent(null);
@@ -184,10 +165,12 @@ const Page = () => {
 
   return (
     <main className="w-full">
-      <Discover soundEnabled={soundEnabled} setSoundEnabled={setSoundEnabled} />
-      <SettingsComponent {
-        ...{ soundEnabled, setSoundEnabled, volume, setVolume }
-      } />
+      <SettingsComponent 
+        soundEnabled={soundEnabled} 
+        setSoundEnabled={setSoundEnabled} 
+        volume={volume} 
+        setVolume={setVolume} 
+      />
       <GlobeWrapper
         continents={continents}
         onSelectContinent={handleContinentSelect}
@@ -211,33 +194,7 @@ const Page = () => {
           ))}
         </div>
       </div>
-      {showVideoPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="w-11/12 h-11/12 max-w-4xl max-h-[80vh]">
-            <video
-              ref={videoRef}
-              className="w-full h-full"
-              controls
-              autoPlay
-              src="/ENDING.mp4"
-            >
-              Your browser does not support the video tag.
-            </video>
-            <Button
-              className="mt-4 bg-white text-black hover:bg-gray-200"
-              onClick={() => {
-                setShowVideoPopup(false);
-                if (videoRef.current) {
-                  videoRef.current.pause();
-                  videoRef.current.currentTime = 0;
-                }
-              }}
-            >
-              Close Video
-            </Button>
-          </div>
-        </div>
-      )}
+
     </main>
   );
 };
